@@ -25,3 +25,5 @@ browse:
 	# mac only
 	make -s token | xargs -I{} open -a '/Applications/Google Chrome.app' http://localhost:10000?token={}
 
+undo-git-check-point:
+	make -s down && rm -fr src/.ipynb_checkpoints/* && git checkout . && make -s up
