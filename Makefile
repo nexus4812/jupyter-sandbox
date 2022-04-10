@@ -1,5 +1,5 @@
 build:
-	docker-compose build --force-rm --no-cache
+	docker-compose build # --force-rm --no-cache
 
 up:
 	docker-compose up -d
@@ -10,7 +10,7 @@ exec:
 down:
 	docker-compose down
 
-update-require:
+export-yaml:
 	docker exec -it jupyter conda env export -n base > myenv.yaml
 
 token = $(shell docker exec -it jupyter jupyter server list --jsonlist | jq -r '.[].token')
