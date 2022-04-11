@@ -1,0 +1,3 @@
+yfinance==0.1.70
+stockstats==0.4.1
+japanize-matplotlib==1.1.3
