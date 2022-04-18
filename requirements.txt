@@ -1,4 +1,11 @@
+# 必須系ライブラリ
+jupyterlab==3.3.3
+pandas
+matplotlib
+seaborn
+japanize-matplotlib
+
+# 開発目的に応じて利用する
 yfinance==0.1.70
 stockstats==0.4.1
-japanize-matplotlib==1.1.3
 backtesting===0.3.3
