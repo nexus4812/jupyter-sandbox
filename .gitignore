@@ -1,4 +1,4 @@
 .idea/
 .env
 .ipynb_checkpoints/
-myenv.yaml
+.virtual_documents

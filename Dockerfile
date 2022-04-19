@@ -24,8 +24,7 @@ RUN pip install \
 
     # for jupyterlab-lsp
     jupyterlab-lsp \
-    python-language-server[all] \
-    jedi-language-server
+    python-language-server[all]
 
 # install jupyter lab extension
 RUN jupyter labextension install \
@@ -36,8 +35,3 @@ RUN jupyter labextension install \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* ~/.cache/pip
 
 WORKDIR "${HOME}"
-
-RUN cd ${HOME} && \
-    mkdir .lsp_symlink && \
-    cd .lsp_symlink && \
-    ln -s /home home
