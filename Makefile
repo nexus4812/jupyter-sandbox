@@ -15,3 +15,6 @@ url = "http://127.0.0.1:8888/"
 
 browse:
 	open -a '/Applications/Google Chrome.app' $(url)
+
+restart:
+	make down && make up && make browse
