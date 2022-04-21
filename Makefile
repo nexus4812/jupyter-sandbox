@@ -17,4 +17,4 @@ browse:
 	open -a '/Applications/Google Chrome.app' $(url)
 
 restart:
-	make down && make up && make browse
+	make down && make up && sleep 5 && make browse
