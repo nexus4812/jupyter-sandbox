@@ -4,8 +4,8 @@ services:
     build: jupyter/.
     container_name: jupyter
     volumes:
-      - ./jupyter/.jupyter:/root/.jupyter
-      - .:/workspace
+      - ./jupyter/root_jupyter:/root/.jupyter
+      - ./src:/workspace
     entrypoint: >
       jupyter-lab
       --allow-root
