@@ -10,7 +10,6 @@ exec:
 down:
 	docker-compose down
 
-token = $(shell docker exec -it jupyter jupyter server list --jsonlist | jq -r '.[].token')
 url = "http://127.0.0.1:8888/"
 
 browse:
