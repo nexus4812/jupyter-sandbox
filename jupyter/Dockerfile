@@ -19,12 +19,19 @@ RUN pip install --upgrade pip  && \
 
 # pip install (extension)
 RUN pip install \
-    # for jupyterlab_variableinspector
+    # jupyterlab_variableinspector
     lckr_jupyterlab_variableinspector==3.0.7 \
 
-    # for jupyterlab-lsp
+    # jupyterlab-lsp
     jupyterlab-lsp \
-    python-language-server[all]
+    python-language-server[all] \
+
+    # jupyterlab-code-formatter
+    jupyterlab-code-formatter \
+    black \
+    yapf \
+    isort \
+    autopep8
 
 # install jupyter lab extension
 RUN jupyter labextension install \
