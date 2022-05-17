@@ -34,9 +34,8 @@ RUN pip install \
     autopep8
 
 # install jupyter lab extension
-RUN jupyter labextension install \
-    @lckr/jupyterlab_variableinspector@3.0.7 \
-    @krassowski/jupyterlab-lsp
+RUN jupyter labextension install @lckr/jupyterlab_variableinspector@3.0.7
+RUN jupyter labextension install @krassowski/jupyterlab-lsp
 
 # clean cache(apt-get and pip)
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* ~/.cache/pip
