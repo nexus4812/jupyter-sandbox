@@ -13,7 +13,7 @@ RUN apt-get update --yes && \
     npm
 
 # install dependencies
-COPY requirements.txt /tmp/
+COPY ../requirements.txt /tmp/
 RUN pip install --upgrade pip  && \
     pip install -r /tmp/requirements.txt
 
