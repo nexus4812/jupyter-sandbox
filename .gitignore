@@ -1,5 +1,7 @@
-.idea/
-.env
 .ipynb_checkpoints/
-.virtual_documents
+.idea/
 jupyter/root_jupyter/*
+build
+*.egg-info
+.env
+.virtual_documents

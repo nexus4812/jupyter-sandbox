@@ -20,3 +20,9 @@ browse:
 
 restart:
 	make down && make up && sleep 5 && make browse
+
+format:
+	docker exec -it jupyter black /workspace
+
+prospector:
+	docker exec -it jupyter prospector /workspace --strictness high
