@@ -6,9 +6,6 @@ services:
     volumes:
       - ./jupyter/root_jupyter:/root/.jupyter
       - ./:/workspace
-    command:
-      - 'ls -l .'
-      - 'pip install -e /workspace/'
     entrypoint: >
       jupyter-lab
       --allow-root
