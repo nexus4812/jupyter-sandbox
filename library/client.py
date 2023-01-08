@@ -2,29 +2,21 @@ import pandas as pd
 import yfinance as yf
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 
 @dataclass
 class Payload:
     tickers: str
-    period: str | None
-    start: datetime | None
-    end: datetime | None
+    period: str = 'max'
+    end:  Optional[datetime] = None
+    start: Optional[datetime] = None
 
     def get_start_as_string(self) -> None | str:
-        if self.start:
-            return self.start.strftime("%Y-%m-%d %H:%M:%S")
-        return None
+        return self.start.strftime("%Y-%m-%d %H:%M:%S") if self.start else None
 
     def get_end_as_string(self) -> None | str:
-        if self.end:
-            return self.end.strftime("%Y-%m-%d %H:%M:%S")
-        return None
-
-    def get_period(self) -> None | str:
-        if self.period:
-            return self.period
-        return None
+        return self.end.strftime("%Y-%m-%d %H:%M:%S") if self.end else None
 
 
 class Client:
@@ -32,7 +24,7 @@ class Client:
     def get(query: Payload) -> pd.DataFrame:
         return yf.download(
             tickers=query.tickers,
-            period=query.get_period(),
+            period=query.period,
             start=query.get_start_as_string(),
             end=query.get_end_as_string(),
             interval="1d",

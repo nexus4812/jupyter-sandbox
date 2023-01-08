@@ -2,21 +2,61 @@ import pandas as pd
 import numpy as np
 from backtesting import Strategy
 from stockstats import StockDataFrame
+from backtesting.lib import crossover
 
 
 class BaseStrategy(Strategy):
-    def use_macd(self, short: int = 12, long: int = 26, signal: int = 9) -> np.ndarray:
+    def declare_macd(self, short: int = 12, long: int = 26, signal: int = 9) -> np.ndarray:
         return self.I(StockDataFrameUtil.macd, self.data.df, short, long, signal)
 
-    def use_average_true_range(self) -> np.ndarray:
+    def declare_average_true_range(self) -> np.ndarray:
         return self.I(StockDataFrameUtil.average_true_range, self.data.df)
 
-    def use_donchian_channel(self, payload: int = 20) -> np.ndarray:
+    def declare_donchian_channel(self, payload: int = 20) -> np.ndarray:
         return self.I(StockDataFrameUtil.donchian_channel, self.data.df, payload)
 
-    def use_simple_moving_average(self, payload: int = 20) -> np.ndarray:
+    def declare_simple_moving_average(self, payload: int = 20) -> np.ndarray:
         return self.I(StockDataFrameUtil.simple_moving_average, self.data.df, payload)
 
+
+class ConcreateStrategy(BaseStrategy):
+    # 神クラスパターンだが、Backtesting.py自体がこの作りなので致し方なし
+    prop_macd_short = 12
+    prop_macd_long = 26
+    prop_macd_signal = 9
+
+    prop_donchian_channel = 20
+
+    def use_macd_strategy(self):
+        self.macd, self.macd_signal = self.declare_macd(self.prop_macd_short, self.prop_macd_long, self.prop_macd_signal)
+
+    def macd_golden_cross(self):
+        self.__assert_attribute(['macd', 'macd_signal'])
+        return crossover(self.macd, self.macd_signal)
+
+    def macd_dead_cross(self):
+        self.__assert_attribute(['macd', 'macd_signal'])
+        return crossover(self.macd_signal, self.macd)
+
+    def use_donchian_channel(self):
+        self.dc_max, self.dc_min = self.declare_donchian_channel()
+
+    def is_donchian_channel_updated_highest(self):
+        self.__assert_attribute(['dc_max'])
+        return self.data.High[-1] > self.dc_max[-1]
+
+    def is_donchian_channel_updated_lowest(self):
+        self.__assert_attribute(['dc_min'])
+        return self.data.Low[-1] > self.dc_min[-1]
+
+    def __assert_attribute(self, attributes: list[str]):
+        # 呼び出し順序が存在する良くないクラス設計なので、簡単にチェックしとく
+        for attribute in attributes:
+            if not self.__has_attribute(attribute):
+                raise AttributeError("has undefined attributes: " + attribute)
+
+    def __has_attribute(self, attribute: str) -> bool:
+        return getattr(self, attribute, False) != False
 
 class StockDataFrameUtil:
     """
@@ -42,10 +82,9 @@ class StockDataFrameUtil:
 
     @classmethod
     def macd(
-        cls, df: pd.DataFrame, short: int = 12, long: int = 26, signal: int = 9
+            cls, df: pd.DataFrame, short: int = 12, long: int = 26, signal: int = 9
     ) -> tuple[pd.Series, pd.Series]:
         sdf = cls.__convert_df_to_stock_df(df)
-
         StockDataFrame.MACD_EMA_SHORT = short
         StockDataFrame.MACD_EMA_LONG = long
         StockDataFrame.MACD_EMA_SIGNAL = signal
@@ -63,7 +102,7 @@ class StockDataFrameUtil:
 
     @classmethod
     def bollinger_bands(
-        cls, df: pd.DataFrame, payload: int = 20, std_times: int = 2
+            cls, df: pd.DataFrame, payload: int = 20, std_times: int = 2
     ) -> tuple[pd.Series, pd.Series, pd.Series]:
         sdf = cls.__convert_df_to_stock_df(df)
         sdf.BOLL_PERIOD = payload
@@ -72,7 +111,7 @@ class StockDataFrameUtil:
 
     @classmethod
     def donchian_channel(
-        cls, df: pd.DataFrame, payload: int = 20
+            cls, df: pd.DataFrame, payload: int = 20
     ) -> tuple[pd.Series, pd.Series]:
         # 手製すぎるのでどうにかしたい
         count = 0
@@ -93,7 +132,7 @@ class StockDataFrameUtil:
                 continue
 
             # 当日は含めないので-1しとく
-            range = df[count - payload : count - 1]
+            range = df[count - payload: count - 1]
             middle.append((range["high"].max() + range["low"].min()) / 2)
             max.append(range["high"].max())
             min.append(range["low"].min())
