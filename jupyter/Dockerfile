@@ -9,7 +9,7 @@ RUN apt-get update --yes && \
     apt-get clean && rm -rf /var/library/apt/lists/*
 
 # install pip dependencies
-COPY requirements.txt /tmp/
+COPY ./requirements.txt /tmp/
 RUN pip install --upgrade pip && \
     # pip install -e /workspace/  && \
     pip install -r /tmp/requirements.txt  && \
