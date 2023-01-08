@@ -7,7 +7,7 @@ class Indicator:
         self.stock_data_frame = stock_data_frame
 
     def __copy(self) -> StockDataFrame:
-        return self.stock_data_frame.df.__copy()
+        return self.stock_data_frame.__copy()
 
     def get_stock_data_frame(self):
         return self.__copy()
