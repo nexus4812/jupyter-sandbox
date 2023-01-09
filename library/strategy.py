@@ -4,8 +4,11 @@ from backtesting import Strategy
 from stockstats import StockDataFrame
 from backtesting.lib import crossover
 
+
 class BaseStrategy(Strategy):
-    def declare_macd(self, short: int = 12, long: int = 26, signal: int = 9) -> np.ndarray:
+    def declare_macd(
+        self, short: int = 12, long: int = 26, signal: int = 9
+    ) -> np.ndarray:
         return self.I(StockDataFrameUtil.macd, self.data.df, short, long, signal)
 
     def declare_atr(self) -> np.ndarray:
@@ -37,25 +40,29 @@ class ConcreateStrategy(BaseStrategy):
     prop_sma_period: int = 20
 
     def use_macd(self):
-        self.macd, self.macd_signal = self.declare_macd(self.prop_macd_short, self.prop_macd_long, self.prop_macd_signal)
+        self.macd, self.macd_signal = self.declare_macd(
+            self.prop_macd_short, self.prop_macd_long, self.prop_macd_signal
+        )
 
     def is_macd_golden_cross(self) -> bool:
-        self.__assert_attribute(['macd', 'macd_signal'])
+        self.__assert_attribute(["macd", "macd_signal"])
         return crossover(self.macd, self.macd_signal)
 
     def is_macd_dead_cross(self) -> bool:
-        self.__assert_attribute(['macd', 'macd_signal'])
+        self.__assert_attribute(["macd", "macd_signal"])
         return crossover(self.macd_signal, self.macd)
 
     def use_donchian_channel(self):
-        self.dc_max, self.dc_min = self.declare_donchian_channel(self.prop_donchian_channel_period)
+        self.dc_max, self.dc_min = self.declare_donchian_channel(
+            self.prop_donchian_channel_period
+        )
 
     def is_donchian_channel_updated_highest(self):
-        self.__assert_attribute(['dc_max'])
+        self.__assert_attribute(["dc_max"])
         return self.data.High[-1] > self.dc_max[-1]
 
     def is_donchian_channel_updated_lowest(self):
-        self.__assert_attribute(['dc_min'])
+        self.__assert_attribute(["dc_min"])
         return self.data.Low[-1] < self.dc_min[-1]
 
     def use_atr(self) -> None:
@@ -68,7 +75,7 @@ class ConcreateStrategy(BaseStrategy):
         現在価格 - 1ATRで損切り
         :return: 損切りする金額
         """
-        self.__assert_attribute(['atr'])
+        self.__assert_attribute(["atr"])
         return self.data.Close[-1] - self.atr[-1] * self.prop_atr_stop_loss
 
     def get_take_profit_price_by_atr(self) -> float:
@@ -78,7 +85,7 @@ class ConcreateStrategy(BaseStrategy):
         現在価格 + 1ATRで利確
         :return: 利確する金額
         """
-        self.__assert_attribute(['atr'])
+        self.__assert_attribute(["atr"])
         return self.data.Close[-1] + self.atr[-1] * self.prop_atr_take_profit
 
     def buy_with_atr(self):
@@ -94,11 +101,11 @@ class ConcreateStrategy(BaseStrategy):
         self.sma = self.declare_sma(self.prop_sma_period)
 
     def is_price_higher_than_sma(self) -> bool:
-        self.__assert_attribute(['sma'])
+        self.__assert_attribute(["sma"])
         return self.sma[-1] < self.data.High[-1]
 
     def is_price_lower_than_sma(self) -> bool:
-        self.__assert_attribute(['sma'])
+        self.__assert_attribute(["sma"])
         return self.sma[-1] > self.data.Low[-1]
 
     def __assert_attribute(self, attributes: list[str]):
@@ -109,6 +116,7 @@ class ConcreateStrategy(BaseStrategy):
 
     def __has_attribute(self, attribute: str) -> bool:
         return getattr(self, attribute, False) != False
+
 
 class StockDataFrameUtil:
     """
@@ -134,7 +142,7 @@ class StockDataFrameUtil:
 
     @classmethod
     def macd(
-            cls, df: pd.DataFrame, short: int = 12, long: int = 26, signal: int = 9
+        cls, df: pd.DataFrame, short: int = 12, long: int = 26, signal: int = 9
     ) -> tuple[pd.Series, pd.Series]:
         sdf = cls.__convert_df_to_stock_df(df)
         StockDataFrame.MACD_EMA_SHORT = short
@@ -154,7 +162,7 @@ class StockDataFrameUtil:
 
     @classmethod
     def bollinger_bands(
-            cls, df: pd.DataFrame, period: int = 20, std_times: int = 2
+        cls, df: pd.DataFrame, period: int = 20, std_times: int = 2
     ) -> tuple[pd.Series, pd.Series, pd.Series]:
         sdf = cls.__convert_df_to_stock_df(df)
         sdf.BOLL_PERIOD = period
@@ -163,7 +171,7 @@ class StockDataFrameUtil:
 
     @classmethod
     def donchian_channel(
-            cls, df: pd.DataFrame, period: int = 20
+        cls, df: pd.DataFrame, period: int = 20
     ) -> tuple[pd.Series, pd.Series]:
         # 手製すぎるのでどうにかしたい
         count = 0
@@ -184,7 +192,7 @@ class StockDataFrameUtil:
                 continue
 
             # 当日は含めないので-1しとく
-            range = df[count - period: count - 1]
+            range = df[count - period : count - 1]
             middle.append((range["high"].max() + range["low"].min()) / 2)
             max.append(range["high"].max())
             min.append(range["low"].min())
