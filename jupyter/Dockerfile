@@ -3,15 +3,15 @@ USER root
 
 # apt-get
 # install ffmpeg for matplotlib
-RUN apt-get update --yes && \
-    apt-get install --yes --no-install-recommends\
-    ffmpeg && \
-    apt-get clean && rm -rf /var/library/apt/lists/*
+# 何に使ってたか思い出せなので、一旦仮で消す
+#RUN apt-get update --yes && \
+#    apt-get install --yes --no-install-recommends\
+#    ffmpeg && \
+#    apt-get clean && rm -rf /var/library/apt/lists/*
 
 # install pip dependencies
 COPY ./requirements.txt /tmp/
 RUN pip install --upgrade pip && \
-    # pip install -e /workspace/  && \
     pip install -r /tmp/requirements.txt  && \
     rm -rf ~/.cache/pip
 

@@ -13,10 +13,10 @@ class Payload:
     start: Optional[datetime] = None
 
     def get_start_as_string(self) -> None | str:
-        return self.start.strftime("%Y-%m-%d %H:%M:%S") if self.start else None
+        return self.start.strftime("%Y/%m/%d %H:%M:%S") if self.start else None
 
     def get_end_as_string(self) -> None | str:
-        return self.end.strftime("%Y-%m-%d %H:%M:%S") if self.end else None
+        return self.end.strftime("%Y/%m/%d %H:%M:%S") if self.end else None
 
 
 class Client:
