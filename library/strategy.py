@@ -53,7 +53,7 @@ class ConcreateStrategy(BaseStrategy):
         return crossover(self.macd_signal, self.macd)
 
     def use_donchian_channel(self):
-        self.dc_max, self.dc_min = self.declare_donchian_channel(
+        self.dc_min, self.dc_max = self.declare_donchian_channel(
             self.prop_donchian_channel_period
         )
 
