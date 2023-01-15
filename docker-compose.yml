@@ -7,7 +7,9 @@ services:
     container_name: jupyter
     volumes:
       - ./:/workspace
-    entrypoint: >
+    command: >
+      bash -c '
+      pip install -e /workspace/.;
       jupyter-lab
       --allow-root
       --ip=0.0.0.0
@@ -15,6 +17,7 @@ services:
       --no-browser
       --NotebookApp.token=''
       --notebook-dir=/workspace
+      '
     expose:
       - "8888"
     ports:
