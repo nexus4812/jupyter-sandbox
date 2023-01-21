@@ -57,6 +57,11 @@ class ConcreateStrategy(BaseStrategy):
             self.prop_donchian_channel_period
         )
 
+    def use_half_donchian_channel(self):
+        self.dc_half_min, self.dc_half_max = self.declare_donchian_channel(
+            int(self.prop_donchian_channel_period / 2)
+        )
+
     def is_donchian_channel_updated_highest(self):
         self.__assert_attribute(["dc_max"])
         return self.data.High[-1] > self.dc_max[-1]
@@ -64,6 +69,14 @@ class ConcreateStrategy(BaseStrategy):
     def is_donchian_channel_updated_lowest(self):
         self.__assert_attribute(["dc_min"])
         return self.data.Low[-1] < self.dc_min[-1]
+
+    def is_half_donchian_channel_updated_highest(self):
+        self.__assert_attribute(["dc_half_max"])
+        return self.data.High[-1] > self.dc_half_max[-1]
+
+    def is_half_donchian_channel_updated_lowest(self):
+        self.__assert_attribute(["dc_half_min"])
+        return self.data.Low[-1] < self.dc_half_min[-1]
 
     def use_atr(self) -> None:
         self.atr = self.declare_atr()
